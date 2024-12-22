@@ -1,0 +1,67 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
+      - name: Run ESLint
+        working-directory: client
+        run: npm run lint
+
+  golangci-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout coe
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.3'
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.62
+          working-directory: api
+
+  api-test:
+    name: API Test
+    runs-on: ubuntu-latest
+    services:
+      dind:
+        image: docker:23.0-rc-dind-rootless
+        ports:
+          - 2375:2375
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.23.3'
+    - name: Get dependencies
+      working-directory: api
+      run: go mod tidy
+    - name: Build
+      working-directory: api
+      run: go build -v ./...
+    - name: Test with dockertest
+      working-directory: api
+      run: go test -v ./...
