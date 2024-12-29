@@ -8,7 +8,6 @@ import (
 	"github.com/ryichk/todolist/api/internal/model"
 )
 
-func PrivateRoutes(e *echo.Echo, h *handler.Handler, db *pgxpool.Pool, queries *model.Queries) {
-	// e.GET("/todos", h.ListTodos)
+func PublicRoutes(e *echo.Echo, h *handler.Handler, db *pgxpool.Pool, queries *model.Queries) {
 	e.GET("/", h.Hello)
 }

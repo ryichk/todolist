@@ -37,7 +37,7 @@ func NewServer(db *pgxpool.Pool) (*echo.Echo, error) {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
-	PrivateRoutes(e, h, db, queries)
+	PublicRoutes(e, h, db, queries)
 
 	return e, nil
 }
