@@ -19,7 +19,7 @@ func (h *Handler) AcquireConnection(ctx context.Context, c echo.Context) (*UserI
 		return nil, err
 	}
 
-	conn, err := h.queries.AcquireConnection(ctx, h.pool)
+	conn, err := h.queries.AcquireConnection(ctx, h.pool, userID)
 	if err != nil {
 		return nil, err
 	}

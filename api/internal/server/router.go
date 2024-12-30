@@ -16,4 +16,5 @@ func PrivateRoutes(e *echo.Echo, h *handler.Handler, db *pgxpool.Pool, queries *
 	e.Use(AuthMiddleware())
 
 	e.GET("/todos", h.ListTodos)
+	e.POST("/todos", h.CreateTodo)
 }

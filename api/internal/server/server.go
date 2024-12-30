@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -26,6 +27,8 @@ func NewServer(db *pgxpool.Pool) (*echo.Echo, error) {
 	e.Server.ReadTimeout = 10 * time.Second
 	e.Server.ReadHeaderTimeout = 10 * time.Second
 	e.Server.WriteTimeout = 10 * time.Second
+
+	e.Validator = &model.CustomValidator{Validator: validator.New(validator.WithRequiredStructEnabled())}
 
 	queries := model.New()
 	h := handler.NewHandler(db, queries)
