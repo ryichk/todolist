@@ -38,6 +38,7 @@ func NewServer(db *pgxpool.Pool) (*echo.Echo, error) {
 	}))
 
 	PublicRoutes(e, h, db, queries)
+	PrivateRoutes(e, h, db, queries)
 
 	return e, nil
 }
