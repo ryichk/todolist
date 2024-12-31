@@ -1,6 +1,9 @@
 package testutil
 
 import (
+	"context"
+	"log"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
@@ -30,4 +33,15 @@ func SetupEcho() *echo.Echo {
 	e := echo.New()
 	e.Validator = &model.CustomValidator{Validator: validator.New(validator.WithRequiredStructEnabled())}
 	return e
+}
+
+func SetAuthContext(c echo.Context) {
+	c.Set("userID", SeedTestUserIDStr())
+}
+
+func Teardown(ctx context.Context, q *model.Queries, conn *pgxpool.Conn) {
+	defer conn.Release()
+	if err := q.TruncateAllTables(ctx, conn); err != nil {
+		log.Fatalf("failed to truncate all tables: %v", err)
+	}
 }

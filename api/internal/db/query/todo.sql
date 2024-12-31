@@ -1,5 +1,6 @@
 -- name: ListTodos :many
 SELECT
+  id,
   title,
   note,
   done,

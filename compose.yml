@@ -28,6 +28,7 @@ services:
       COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID}
     volumes:
       - ./api:/api
+      - /var/run/docker.sock:/var/run/docker.sock
     tty: true
     depends_on:
       - db
