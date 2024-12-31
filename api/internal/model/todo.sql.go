@@ -49,6 +49,7 @@ func (q *Queries) DoneTodo(ctx context.Context, db DBTX, id pgtype.UUID) error {
 
 const listTodos = `-- name: ListTodos :many
 SELECT
+  id,
   title,
   note,
   done,
@@ -59,6 +60,7 @@ ORDER BY updated_at DESC
 `
 
 type ListTodosRow struct {
+	ID        pgtype.UUID        `json:"id"`
 	Title     string             `json:"title"`
 	Note      pgtype.Text        `json:"note"`
 	Done      bool               `json:"done"`
@@ -76,6 +78,7 @@ func (q *Queries) ListTodos(ctx context.Context, db DBTX) ([]*ListTodosRow, erro
 	for rows.Next() {
 		var i ListTodosRow
 		if err := rows.Scan(
+			&i.ID,
 			&i.Title,
 			&i.Note,
 			&i.Done,
