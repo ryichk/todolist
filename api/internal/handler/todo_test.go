@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/labstack/echo/v4"
 	"github.com/ryichk/todolist/api/internal/model"
 	"github.com/ryichk/todolist/api/internal/testutil"
 )
@@ -51,6 +53,47 @@ func TestListTodos(t *testing.T) {
 		}
 		if got[0].Note != todo.Note {
 			t.Errorf("Handler.ListTodos() got Note = %v, want %v", got[0].Note, todo.Note)
+		}
+	})
+
+	testutil.Teardown(ctx, queries, conn)
+}
+
+func TestCreateTodo(t *testing.T) {
+	e := testutil.SetupEcho()
+	queries := model.New()
+	h := NewHandler(testDBPool, queries)
+	ctx := context.Background()
+	userID := testutil.SeedTestUserID()
+	conn, err := queries.AcquireConnection(ctx, testDBPool, userID)
+	if err != nil {
+		log.Fatalf("failed to acquire connection: %v", err)
+	}
+
+	t.Run("Todoを作成できる", func(t *testing.T) {
+		requestBody, _ := json.Marshal(map[string]interface{}{
+			"title": "テストタイトル",
+			"note": "テストメモ",
+		})
+		req := httptest.NewRequest(http.MethodPost, "/todos", bytes.NewReader(requestBody))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		testutil.SetAuthContext(c)
+
+		if err := h.CreateTodo(c); err != nil {
+			t.Errorf("Handler.CreateTodo() error = %v", err)
+		}
+		if rec.Code != http.StatusCreated {
+			t.Errorf("Handler.CreateTodo() got http status = %v, want %v", rec.Code, http.StatusCreated)
+		}
+		var got map[string]string
+		if err := json.NewDecoder(rec.Body).Decode(&got); err != nil {
+			t.Errorf("Handler.CreateTodo() error decoding response body: %v", err)
+		}
+		successMessage := "Successfully created a todo"
+		if got["message"] != successMessage {
+			t.Errorf("Handler.CreateTodo() got message = %v, want %v", got["message"], successMessage)
 		}
 	})
 
