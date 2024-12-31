@@ -1,4 +1,6 @@
 import { useAuth } from "react-oidc-context";
+import { Button } from "./ui/button";
+import { Toaster } from "./ui/toaster";
 
 export default function Header() {
   const auth = useAuth();
@@ -9,10 +11,11 @@ export default function Header() {
         Todo List
       </span>
       <div className="justify-self-end">
+        <Toaster />
         {auth?.isAuthenticated ? (
-          <button onClick={() => auth.removeUser()}>ログアウト</button>
+          <Button onClick={() => auth.removeUser()}>ログアウト</Button>
         ) : (
-          <button type="button" className="mx-2" onClick={() => auth.signinRedirect()}>ログイン</button>
+          <Button type="button" className="mx-2" onClick={() => auth.signinRedirect()}>ログイン</Button>
         )}
       </div>
     </header>
