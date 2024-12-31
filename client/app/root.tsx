@@ -35,6 +35,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
     redirect_uri: redirectUri,
     response_type: "code",
     scope: "email openid phone",
+    onSigninCallback: (): void => {
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname,
+      )
+    }
   }
 
   return (
