@@ -71,9 +71,11 @@ func TestCreateTodo(t *testing.T) {
 	}
 
 	t.Run("Todoを作成できる", func(t *testing.T) {
+		title := "TODOタイトル"
+		note := "TODOの詳細です。"
 		requestBody, _ := json.Marshal(map[string]interface{}{
-			"title": "テストタイトル",
-			"note": "テストメモ",
+			"title": title,
+			"note": note,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/todos", bytes.NewReader(requestBody))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -91,9 +93,11 @@ func TestCreateTodo(t *testing.T) {
 		if err := json.NewDecoder(rec.Body).Decode(&got); err != nil {
 			t.Errorf("Handler.CreateTodo() error decoding response body: %v", err)
 		}
-		successMessage := "Successfully created a todo"
-		if got["message"] != successMessage {
-			t.Errorf("Handler.CreateTodo() got message = %v, want %v", got["message"], successMessage)
+		if got["title"] != title {
+			t.Errorf("Handler.CreateTodo() got title = %v, want = %v", got["title"], title)
+		}
+		if got["note"] != note {
+			t.Errorf("Handler.CreateTodo() got note = %v, want = %v", got["note"], note)
 		}
 	})
 
