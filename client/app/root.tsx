@@ -9,6 +9,7 @@ import type { LinksFunction } from "@remix-run/node";
 import { AuthProvider } from "react-oidc-context";
 
 import Header from "./components/header";
+
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -55,7 +56,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <AuthProvider {...cognitoAuthConfig}>
           <Header />
-          {children}
+          <div className="p-5">
+            {children}
+          </div>
         </AuthProvider>
         <ScrollRestoration />
         <Scripts />
