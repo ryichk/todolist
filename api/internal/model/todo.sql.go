@@ -19,7 +19,7 @@ INSERT INTO app.todos (
 ) VALUES (
   $1, $2, $3
 )
-RETURNING id
+RETURNING id, title, note
 `
 
 type CreateTodoParams struct {
@@ -28,11 +28,17 @@ type CreateTodoParams struct {
 	Note   pgtype.Text `json:"note"`
 }
 
-func (q *Queries) CreateTodo(ctx context.Context, db DBTX, arg CreateTodoParams) (pgtype.UUID, error) {
+type CreateTodoRow struct {
+	ID    pgtype.UUID `json:"id"`
+	Title string      `json:"title"`
+	Note  pgtype.Text `json:"note"`
+}
+
+func (q *Queries) CreateTodo(ctx context.Context, db DBTX, arg CreateTodoParams) (*CreateTodoRow, error) {
 	row := db.QueryRow(ctx, createTodo, arg.UserID, arg.Title, arg.Note)
-	var id pgtype.UUID
-	err := row.Scan(&id)
-	return id, err
+	var i CreateTodoRow
+	err := row.Scan(&i.ID, &i.Title, &i.Note)
+	return &i, err
 }
 
 const doneTodo = `-- name: DoneTodo :exec

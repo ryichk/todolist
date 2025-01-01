@@ -52,13 +52,13 @@ func SetupTestTodo(ctx context.Context, q *model.Queries, conn *pgxpool.Conn) mo
 		title,
 		note,
 	)
-	todoID, err := q.CreateTodo(ctx, conn, *createTodoParams)
+	todo, err := q.CreateTodo(ctx, conn, *createTodoParams)
 	if err != nil {
 		log.Fatalf("failed to create todo: %v", err)
 	}
 
 	return model.Todo{
-		ID:    todoID,
+		ID:    todo.ID,
 		Title: title,
 		Note:  note,
 		Done:  false,

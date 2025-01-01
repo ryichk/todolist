@@ -55,15 +55,11 @@ func (h *Handler) CreateTodo(c echo.Context) error {
 		body.Title,
 		body.Note,
 	)
-	if todoID, err := h.queries.CreateTodo(ctx, userInfo.Conn, *createTodoParams); err != nil {
+	todo, err := h.queries.CreateTodo(ctx, userInfo.Conn, *createTodoParams)
+	if err != nil {
 		log.Printf("failed to create todo: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create todo")
-	} else {
-		log.Printf("Todo ID: %v", todoID)
 	}
 
-	response := map[string]string{
-		"message": "Successfully created a todo",
-	}
-	return c.JSON(http.StatusCreated, response)
+	return c.JSON(http.StatusCreated, todo)
 }
