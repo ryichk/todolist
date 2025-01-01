@@ -11,6 +11,7 @@ import { AuthProvider } from "react-oidc-context";
 import Header from "./components/header";
 
 import "./tailwind.css";
+import { AWS_REGION, COGNITO_CLIENT_ID, COGNITO_REDIRECT_URI, COGNITO_USER_POOL_ID } from "./constants";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,14 +27,10 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const awsRegion = import.meta.env.VITE_AWS_REGION;
-  const userPoolId = import.meta.env.VITE_COGNITO_USER_POOL_ID;
-  const clientId = import.meta.env.VITE_COGNITO_CLIENT_ID;
-  const redirectUri = import.meta.env.VITE_COGNITO_REDIRECT_URI;
   const cognitoAuthConfig = {
-    authority: `https://cognito-idp.${awsRegion}.amazonaws.com/${userPoolId}`,
-    client_id: clientId,
-    redirect_uri: redirectUri,
+    authority: `https://cognito-idp.${AWS_REGION}.amazonaws.com/${COGNITO_USER_POOL_ID}`,
+    client_id: COGNITO_CLIENT_ID,
+    redirect_uri: COGNITO_REDIRECT_URI,
     response_type: "code",
     scope: "email openid phone",
     onSigninCallback: (): void => {

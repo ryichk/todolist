@@ -42,7 +42,7 @@ cp .env.sample .env
 cp client/.env.sample client/.env
 ```
 
-Set the Amazon Cognito User Pool ID and Client ID to be handled in the development environment in the environment variables of the `.env` and `client/.env` files.
+Set the Amazon Cognito User Pool ID and Client ID and Cognito domain URL to be handled in the development environment in the environment variables of the `.env` and `client/.env` files.
 
 ```.env
 COGNITO_USER_POOL_ID=
@@ -51,6 +51,7 @@ COGNITO_USER_POOL_ID=
 ```client/.env
 VITE_COGNITO_USER_POOL_ID=
 VITE_COGNITO_CLIENT_ID=
+VITE_COGNITO_DOMAIN=
 ```
 
 ### 3. Start the Docker Containers
