@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import TodoForm from "~/components/todo-form";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { API_DOMAIN } from "~/constants";
 import { useToast } from "~/hooks/use-toast";
 import { Todo } from "~/types";
 
@@ -21,7 +22,7 @@ export default function Index() {
   const token = auth.user?.access_token ?? '';
   const fetchTodos = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:8080/todos', {
+      const res = await fetch(`${API_DOMAIN}/todos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
