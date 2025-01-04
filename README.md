@@ -28,6 +28,17 @@
 
 - PostgreSQL
 
+### Infrastructure
+
+#### Cloud Vendor
+
+- AWS
+
+#### Tools
+
+- Node.js v22.11.0
+- aws-cdk v2.173.4
+
 ## Environment Construction
 
 ### 1. Install Docker
@@ -151,3 +162,32 @@ The request handler implements request validation, etc.
 ### Implement Request Routing
 
 Implement request routing in `api/internal/server/router.go`.
+
+## Infrastructure Construction and Deployment Procedures
+
+### Setup
+
+```sh
+make npm_i_infra-ts
+make cdk_bootstrap
+```
+
+### Build Frontend Code
+
+```sh
+make build_client
+```
+
+### Deploy
+
+#### Deploy All Stack
+
+```sh
+make cdk_deploy_all
+```
+
+#### Deploy Stacks individually
+
+```sh
+make cdk_deploy STACK=StackName
+```

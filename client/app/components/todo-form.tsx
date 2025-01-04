@@ -8,6 +8,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Dispatch, SetStateAction } from "react";
 import { Todo } from "~/types";
+import { API_DOMAIN } from "~/constants";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -34,7 +35,7 @@ export default function TodoForm({ accessToken, setTodos }: Props) {
 
   const createTodo = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await fetch('http://localhost:8080/todos', {
+      const res = await fetch(`${API_DOMAIN}/todos`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",

@@ -1,12 +1,14 @@
 # root
 .env
+.env.production
+tmp
 
 # client
 node_modules
 
-/.cache
-/build
-/public/build
+/client/.cache
+/client/build
+/client/public/build
 
 # api
 ## Binaries for programs and plugins
@@ -26,4 +28,9 @@ node_modules
 go.work
 go.work.sum
 
-tmp
+# infra-ts
+infra-ts/*.js
+!jest.config.js
+*.d.ts
+
+.cdk.staging

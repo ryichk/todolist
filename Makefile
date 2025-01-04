@@ -61,3 +61,36 @@ test:
 
 test_v:
 	$(DOCKER_RUN_API) go test -v -cover ./...
+
+build_client:
+	$(DOCKER_RUN_CLIENT) npm run build
+
+npm_infra-ts:
+	npm $(CMD) --prefix ./infra-ts
+
+npm_i_infra-ts:
+	npm i --prefix ./infra-ts
+
+cdk:
+	npm run cdk $(CMD) --prefix ./infra-ts
+
+cdk_bootstrap:
+	npm run cdk:bootstrap --prefix ./infra-ts
+
+cdk_deploy:
+	npm run cdk:deploy $(STACK) --prefix ./infra-ts
+
+cdk_deploy_all:
+	npm run cdk:deploy:all --prefix ./infra-ts
+
+cdk_rollback:
+	npm run cdk:rollback $(STACK) --prefix ./infra-ts
+
+cdk_rollback_all:
+	npm run cdk:rollback:all --prefix ./infra-ts
+
+cdk_destroy:
+	npm run cdk:destroy $(STACK) --prefix ./infra-ts
+
+cdk_destroy_all:
+	npm run cdk:destroy:all --prefix ./infra-ts
