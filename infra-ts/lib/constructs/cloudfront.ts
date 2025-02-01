@@ -31,6 +31,58 @@ export class CloudFront extends Construct {
       enableLogAnalytics
     } = props;
 
+    const webACL = new cdk.aws_wafv2.CfnWebACL(this, "TodoListCloudFrontWebACL", {
+      defaultAction: { allow: {} },
+      scope: "CLOUDFRONT",
+      visibilityConfig: {
+        cloudWatchMetricsEnabled: true,
+        metricName: "CloudFrontSecurity",
+        sampledRequestsEnabled: true,
+      },
+      rules: [
+        {
+          name: "AWS-AWSManagedRulesCommonRuleSet",
+          priority: 0,
+          statement: {
+            managedRuleGroupStatement: {
+              vendorName: "AWS",
+              name: "AWSManagedRulesCommonRuleSet",
+            },
+          },
+          overrideAction: {
+            none: {}
+          },
+          visibilityConfig: {
+            cloudWatchMetricsEnabled: true,
+            metricName: "AWSManagedRulesCommonRuleSet",
+            sampledRequestsEnabled: true,
+          },
+        },
+        {
+          name: "GeoRestriction",
+          priority: 1,
+          statement: {
+            geoMatchStatement: {
+              countryCodes: ["JP"],
+            },
+          },
+          action: {
+            block: {}
+          },
+          visibilityConfig: {
+            cloudWatchMetricsEnabled: true,
+            metricName: "GeoRestriction",
+            sampledRequestsEnabled: true,
+          }
+        }
+      ]
+    });
+
+    new cdk.aws_wafv2.CfnWebACLAssociation(this, "WebACLAssociation", {
+      webAclArn: webACL.attrArn,
+      resourceArn: `arn:aws:cloudfront::${cdk.Stack.of(this).account}:distribution/${this.distribution.distributionId}`
+    })
+
     this.distribution = new cdk.aws_cloudfront.Distribution(this, "Default", {
       defaultRootObject: "index.html",
       errorResponses: [

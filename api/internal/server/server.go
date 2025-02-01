@@ -1,7 +1,6 @@
 package server
 
 import (
-	"net/http"
 	"os"
 	"time"
 
@@ -37,9 +36,8 @@ func NewServer(db *pgxpool.Pool) (*echo.Echo, error) {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:5173"},
+		AllowOrigins: []string{os.Getenv("CLIENT_DOMAIN")},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
-		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut},
 	}))
 
 	PublicRoutes(e, h, db, queries)

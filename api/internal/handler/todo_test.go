@@ -75,7 +75,7 @@ func TestCreateTodo(t *testing.T) {
 		note := "TODOの詳細です。"
 		requestBody, _ := json.Marshal(map[string]interface{}{
 			"title": title,
-			"note": note,
+			"note":  note,
 		})
 		req := httptest.NewRequest(http.MethodPost, "/todos", bytes.NewReader(requestBody))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)

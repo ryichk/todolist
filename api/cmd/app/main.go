@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"time"
 
@@ -12,10 +13,11 @@ import (
 )
 
 func main() {
+	password := url.QueryEscape(os.Getenv("POSTGRES_APP_PASSWORD"))
 	dbURL := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		os.Getenv("POSTGRES_APP_USER"),
-		os.Getenv("POSTGRES_APP_PASSWORD"),
+		password,
 		os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_PORT"),
 		os.Getenv("POSTGRES_DB"),
